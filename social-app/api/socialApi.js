@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const SERVER = process.env.SERVER;
+
+console.log(SERVER)
+
 let socialApi = axios.create({
-    baseURL: 'http://34.125.238.158:4000/api'
+    baseURL: SERVER,
     //baseURL: 'http://localhost:4000/api',
 });
 
