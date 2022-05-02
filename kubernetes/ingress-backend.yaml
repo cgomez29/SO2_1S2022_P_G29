@@ -1,0 +1,74 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://pagina-web.35.226.69.115.nip.io"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: POST, OPTIONS, GET, PUT, DELETE
+    nginx.ingress.kubernetes.io/cors-allow-headers: Accept, Authorization, Content-Type, Content-Length, X-CSRF-Token, Token, session, Origin, Host, Connection, Accept-Encoding, Accept-Language, X-Requested-With
+  namespace: sopes-proyecto2
+spec:
+  rules:
+  - host: backend.35.226.69.115.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-sopes-service
+            port:
+              number: 4000
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress-v2
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: POST, OPTIONS, GET, PUT, DELETE
+    nginx.ingress.kubernetes.io/cors-allow-headers: Accept, Authorization, Content-Type, Content-Length, X-CSRF-Token, Token, session, Origin, Host, Connection, Accept-Encoding, Accept-Language, X-Requested-With
+  namespace: sopes-proyecto2
+spec:
+  rules:
+  - host: pagina-web.35.226.69.115.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-sopes-service
+            port:
+              number: 3000
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-backend
+  namespace: sopes-proyecto2
+data:
+ nginx.conf: |-
+    events {}
+    http {
+        server {
+          listen 4000;
+            location / {
+                return 500;
+            }
+        }
+        server {
+          listen 3000;
+            location / {
+                return 500;
+            }
+        }
+    }
