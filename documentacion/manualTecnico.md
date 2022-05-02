@@ -21,9 +21,9 @@
   - [Instalacion](#instalacion)
       - [Prometheus](#prometheus)
       - [Grafana](#grafana)
+      - [Kubernetes](#kubernetes)
   - [Configuracion y Despliegue](#configuracion-y-despliegue)
     - [Docker](#docker)
-    - [Kubernetes](#kubernetes)
     - [Archivos YAML](#archivos-yaml)
   -[Glosario](#glosario)
 
@@ -112,43 +112,6 @@ https://grafana.com/grafana/dashboards/1860
 http://35.226.69.115:3000/d/rYdddlPWk/node-exporter-full?orgId=1&refresh=5s&from=now-5m&to=now
 ```
 
-### Configuracion y Despliegue
-
-#### Docker
-Es un proyecto de código abierto que automatiza el despliegue de aplicaciones dentro de contenedores de software, proporcionando una capa adicional de abstracción y automatización de virtualización de aplicaciones en múltiples sistemas operativos.
-
-Docker File Social App
-```dockerfile
-FROM node:alpine
-
-# create & set working directory
-RUN mkdir -p /usr/src
-WORKDIR /usr/src
-
-# copy source files
-COPY . /usr/src
-
-# install dependencies
-RUN npm install
-
-# start app
-RUN npm run build
-EXPOSE 3000
-CMD npm run start
-```
-
-Docker File server
-```dockerfile
-FROM golang:1.16.2-alpine3.13
-WORKDIR /app/src
-ENV GOPATH=/app
-COPY go.mod /app/src
-RUN go mod download
-COPY . /app/src
-EXPOSE 4000
-CMD ["go", "run", "main.go"]
-```
-
 #### Kubernetes
 Instalacion
 ```powerShell
@@ -205,6 +168,45 @@ Inyectando deployment del nginx-ingres
 # obtener IP
     kubectl get svc -n <namespace>
 ```
+
+### Configuracion y Despliegue
+
+#### Docker
+Es un proyecto de código abierto que automatiza el despliegue de aplicaciones dentro de contenedores de software, proporcionando una capa adicional de abstracción y automatización de virtualización de aplicaciones en múltiples sistemas operativos.
+
+Docker File Social App
+```dockerfile
+FROM node:alpine
+
+# create & set working directory
+RUN mkdir -p /usr/src
+WORKDIR /usr/src
+
+# copy source files
+COPY . /usr/src
+
+# install dependencies
+RUN npm install
+
+# start app
+RUN npm run build
+EXPOSE 3000
+CMD npm run start
+```
+
+Docker File server
+```dockerfile
+FROM golang:1.16.2-alpine3.13
+WORKDIR /app/src
+ENV GOPATH=/app
+COPY go.mod /app/src
+RUN go mod download
+COPY . /app/src
+EXPOSE 4000
+CMD ["go", "run", "main.go"]
+```
+
+
 ### Archivos YAML
 
 Deployment
